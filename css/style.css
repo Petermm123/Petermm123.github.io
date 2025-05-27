@@ -221,3 +221,10 @@ body {
   padding: 0.3rem 0.8rem !important;
   font-size: 0.9rem !important;
 } 
+#recent-score {
+  transition: transform 0.2s ease;
+}
+
+#recent-score:active {
+  transform: scale(1.1);
+}

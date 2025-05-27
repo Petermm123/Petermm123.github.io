@@ -24,3 +24,19 @@ topScores.forEach(score => {
   li.textContent = score;
   topScoresList.appendChild(li);
 });
+function animateScore(finalScore) {
+  const display = document.getElementById('recent-score');
+  let current = 0;
+  const duration = 1000; // total animation time in ms
+  const stepTime = Math.max(Math.floor(duration / finalScore), 20);
+
+  const counter = setInterval(() => {
+    current++;
+    display.textContent = current;
+    if (current >= finalScore) {
+      clearInterval(counter);
+    }
+  }, stepTime);
+}
+
+animateScore(Number(recentScore));
