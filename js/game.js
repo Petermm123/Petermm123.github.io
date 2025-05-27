@@ -1,4 +1,5 @@
 const jumpSound = new Audio('assets/sounds/jump.mp3'); // jumping sound
+const gameOverSound = new Audio('assets/sounds/game-over.mp3');
 
 // Core game logic: player jump, obstacle generation, scoring
 
@@ -115,11 +116,21 @@ function update() {
 
 // End game
 function endGame() {
-  gameOver = true;
-  localStorage.setItem('skyjumper_score', score);
-  alert(`Game Over! Your score: ${score}`);
-  window.location.href = 'scores.html';
+  if (!gameOver) {
+    gameOver = true;
+
+    // Play game over sound
+    gameOverSound.currentTime = 0;
+    gameOverSound.play();
+
+    // Save score andredirect
+    localStorage.setItem('skyjumper_score', score);
+    setTimeout(() => {
+      window.location.href = 'scores.html';
+    }, 1000); // Wait 1 second to let the sound play
+  }
 }
+
 
 // Start game
 setInterval(spawnObstacle, obstacleInterval);
