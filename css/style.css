@@ -199,3 +199,25 @@ body {
     display: none;
   }
 }
+.back-button-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+#game-header {
+  position: fixed;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+.small-btn {
+  padding: 0.3rem 0.8rem !important;
+  font-size: 0.9rem !important;
+} 
