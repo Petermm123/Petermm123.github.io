@@ -1,4 +1,5 @@
-// Sky Jumper - game.js
+const jumpSound = new Audio('assets/sounds/jump.mp3'); // jumping sound
+
 // Core game logic: player jump, obstacle generation, scoring
 
 const canvas = document.getElementById('game-canvas');
@@ -31,6 +32,11 @@ function jump() {
   if (!player.isJumping) {
     player.velocityY = jumpStrength;
     player.isJumping = true;
+    
+// Play jump sound
+   jumpSound.currentTime = 0; // rewind to start
+  jumpSound.play();
+
   }
 }
 
