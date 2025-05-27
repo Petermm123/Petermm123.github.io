@@ -20,11 +20,40 @@
   <div class="game-container">
     <canvas id="game-canvas" width="400" height="600"></canvas>
   </div>
+  <div id="rotate-warning">
+  🔄 Please rotate your device to landscape for the best experience.
+</div>
+
+<script>
+  let warningTimeout;
+
+  function checkOrientation() {
+    const warning = document.getElementById('rotate-warning');
+    const game = document.querySelector('.game-container');
+
+    if (window.innerHeight > window.innerWidth) {
+      // Portrait mode
+      warning.style.display = 'flex';
+      if (game) game.style.display = 'none';
+
+      // Hide warning after 5 seconds
+      clearTimeout(warningTimeout);
+      warningTimeout = setTimeout(() => {
+        warning.style.display = 'none';
+        if (game) game.style.display = 'block';
+      }, 5000);
+    } else {
+      // Landscape mode
+      clearTimeout(warningTimeout);
+      warning.style.display = 'none';
+      if (game) game.style.display = 'block';
+    }
+  }
+
+  window.addEventListener('load', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
+  window.addEventListener('orientationchange', checkOrientation);
+</script>
+
 </body>
-<div id="rotate-warning">
-   Please rotate your device to landscape for the best experience.
-</div>
- <div id="game-header">
-  <div id="score-display">Score: 0</div>
-  <a href="index.html" class="btn small-btn">Exit</a>
-</div>
+
