@@ -31,7 +31,7 @@ let gameOver = false;
 let isPaused = false;
 let obstacleIntervalId;
 
-// Handle jump input
+//  Handle jump input
 function jump() {
   if (!player.isJumping && !isPaused && !gameOver) {
     player.velocityY = jumpStrength;
@@ -56,7 +56,7 @@ document.body.addEventListener('click', (e) => {
 canvas.addEventListener('touchstart', jump);
 document.body.addEventListener('touchstart', jump);
 
-// Spawn new obstacles
+// 🧱 Spawn new obstacles
 function spawnObstacle() {
   const height = 30 + Math.random() * 50;
   const width = 30 + Math.random() * 20;
