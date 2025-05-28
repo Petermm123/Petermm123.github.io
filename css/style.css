@@ -68,10 +68,10 @@ html, body {
 }
 
 #game-canvas {
-  border: 3px solid var(--primary);
+  border: 4px solid #333; /* Darker, more visible border */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #19ac0bf8;
   display: block;
   width: 100%;
   height: auto;
