@@ -3,7 +3,7 @@ const jumpSound = new Audio('assets/sounds/jump.mp3');
 const gameOverSound = new Audio('assets/sounds/game-over.mp3');
 
 const canvas = document.getElementById('game-canvas');
-  const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score-display');
 
 // Game settings
@@ -12,22 +12,20 @@ const jumpStrength = -10;
 const obstacleSpeed = 3;
 const obstacleInterval = 1500;
 
-
 const player = {
   x: 50,
   y: canvas.height - 60,
   width: 20,
   height: 50,
   velocityY: 0,
-  isJumping: false//  Player object
+  isJumping: false
 };
-
 
 let obstacles = [];
 let score = 0;
 let gameOver = false;
 let isPaused = false;
-let obstacleIntervalId;// Obstacles and game state
+let obstacleIntervalId;
 
 // 🕹️ Handle jump input
 function jump() {
@@ -39,10 +37,8 @@ function jump() {
   }
 }
 
-// 🎮 Input listeners
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') jump();
-});
+// 🕹️ Input listeners
+canvas.addEventListener('click', jump);
 canvas.addEventListener('touchstart', jump);
 document.body.addEventListener('touchstart', jump);
 
@@ -117,20 +113,16 @@ function update() {
 function endGame() {
   gameOver = true;
   clearInterval(obstacleIntervalId);
-
-  //  Play game over sound
   gameOverSound.currentTime = 0;
   gameOverSound.play();
-
   localStorage.setItem('skyjumper_score', score);
 
-  // Wait 1 second before redirecting
   setTimeout(() => {
     window.location.href = 'scores.html';
   }, 1000);
 }
 
-// ▶Start game
+// ▶ Start game
 obstacleIntervalId = setInterval(spawnObstacle, obstacleInterval);
 update();
 
