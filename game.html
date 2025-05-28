@@ -7,77 +7,40 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="score-display">Score: 0</div>
-  <canvas id="game-canvas" width="400" height="600"></canvas>
+  <!-- Rotate warning for mobile portrait mode -->
+  <div id="rotate-warning">🔄 Please rotate your device to landscape for the best experience.</div>
 
+  <!-- Game container -->
+  <div class="game-container">
+    <div id="score-display">Score: 0</div>
+    <canvas id="game-canvas" width="400" height="600"></canvas>
+  </div>
+
+  <!-- Orientation check script -->
+  <script>
+    function isMobileDevice() {
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    function checkOrientation() {
+      const warning = document.getElementById('rotate-warning');
+      const game = document.querySelector('.game-container');
+
+      if (isMobileDevice() && window.innerHeight > window.innerWidth) {
+        warning.style.display = 'flex';
+        if (game) game.style.display = 'none';
+      } else {
+        warning.style.display = 'none';
+        if (game) game.style.display = 'block';
+      }
+    }
+
+    window.addEventListener('load', checkOrientation);
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+  </script>
+
+  <!-- Game logic -->
   <script src="js/game.js"></script>
 </body>
 </html>
-<div class="game-container">
-  <canvas id="game-canvas" width="400" height="600"></canvas>
-</div>
-<body ontouchstart="">
-  <div class="game-container">
-    <canvas id="game-canvas" width="400" height="600"></canvas>
-  </div>
-  <div id="rotate-warning">
-  🔄 Please rotate your device to landscape for the best experience.
-</div>
-
-<script>
-  let warningTimeout;
-
-  function checkOrientation() {
-    const warning = document.getElementById('rotate-warning');
-    const game = document.querySelector('.game-container');
-
-    if (window.innerHeight > window.innerWidth) {
-      // Portrait mode
-      warning.style.display = 'flex';
-      if (game) game.style.display = 'none';
-
-      // Hide warning after 5 seconds
-      clearTimeout(warningTimeout);
-      warningTimeout = setTimeout(() => {
-        warning.style.display = 'none';
-        if (game) game.style.display = 'block';
-      }, 2000); // 2secs
-    } else {
-      // Landscape mode
-      clearTimeout(warningTimeout);
-      warning.style.display = 'none';
-      if (game) game.style.display = 'block';
-    }
-  }
-
-  window.addEventListener('load', checkOrientation);
-  window.addEventListener('resize', checkOrientation);
-  window.addEventListener('orientationchange', checkOrientation);
-</script>
-
-</body>
-<script>
-  function isMobileDevice() {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }
-
-  function checkOrientation() {
-    const warning = document.getElementById('rotate-warning');
-    const game = document.querySelector('.game-container');
-
-    if (isMobileDevice() && window.innerHeight > window.innerWidth) {
-      // Portrait mode on mobile
-      warning.style.display = 'flex';
-      if (game) game.style.display = 'none';
-    } else {
-      // Landscape or desktop
-      warning.style.display = 'none';
-      if (game) game.style.display = 'block';
-    }
-  }
-
-  window.addEventListener('load', checkOrientation);
-  window.addEventListener('resize', checkOrientation);
-  window.addEventListener('orientationchange', checkOrientation);
-</script>
-
