@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- Rotate warning for mobile portrait mode -->
-  <div id="rotate-warning">🔄 Please rotate your device to landscape for the best experience.</div>
+  <!-- Rotate warning for mobile landscape mode -->
+  <div id="rotate-warning">🔄 Please rotate your device to portrait for the best experience.</div>
 
   <!-- Game container -->
   <div class="game-container">
     <div id="score-display">Score: 0</div>
     <canvas id="game-canvas" width="400" height="600"></canvas>
+    <button id="pause-btn" class="btn small-btn">⏸ Pause</button>
   </div>
 
   <!-- Orientation check script -->
@@ -26,12 +27,13 @@
       const warning = document.getElementById('rotate-warning');
       const game = document.querySelector('.game-container');
 
-      if (isMobileDevice() && window.innerHeight > window.innerWidth) {
+      // Require portrait mode instead of landscape
+      if (isMobileDevice() && window.innerWidth > window.innerHeight) {
         warning.style.display = 'flex';
         if (game) game.style.display = 'none';
       } else {
         warning.style.display = 'none';
-        if (game) game.style.display = 'block';
+        if (game) game.style.display = 'flex';
       }
     }
 
