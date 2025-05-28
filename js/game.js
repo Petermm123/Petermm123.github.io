@@ -6,10 +6,6 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score-display');
 
-// Load character sprite
-const characterSprite = new Image();
-characterSprite.src = 'assets/sprites/character.png';
-
 // Game settings
 const gravity = 0.5;
 const jumpStrength = -10;
@@ -19,19 +15,19 @@ const obstacleInterval = 1500;
 const player = {
   x: 50,
   y: canvas.height - 60,
-  width: 40,
+  width: 20,
   height: 50,
   velocityY: 0,
-  isJumping: false
+  isJumping: false // Player object
 };
 
 let obstacles = [];
 let score = 0;
 let gameOver = false;
 let isPaused = false;
-let obstacleIntervalId;
+let obstacleIntervalId; // Obstacles and game state
 
-//  Handle jump input
+// 🕹️ Handle jump input
 function jump() {
   if (!player.isJumping && !isPaused && !gameOver) {
     player.velocityY = jumpStrength;
@@ -41,17 +37,9 @@ function jump() {
   }
 }
 
-// 🖱️ Input listeners
-document.body.addEventListener('click', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  if (
-    e.clientX >= rect.left &&
-    e.clientX <= rect.right &&
-    e.clientY >= rect.top &&
-    e.clientY <= rect.bottom
-  ) {
-    jump();
-  }
+// 🎮 Input listeners
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') jump();
 });
 canvas.addEventListener('touchstart', jump);
 document.body.addEventListener('touchstart', jump);
@@ -59,11 +47,10 @@ document.body.addEventListener('touchstart', jump);
 // 🧱 Spawn new obstacles
 function spawnObstacle() {
   const height = 30 + Math.random() * 50;
-  const width = 30 + Math.random() * 20;
   obstacles.push({
     x: canvas.width,
     y: canvas.height - height,
-    width: width,
+    width: 30,
     height: height
   });
 }
@@ -78,7 +65,7 @@ function isColliding(a, b) {
   );
 }
 
-// 🎮 Game loop
+// Game loop
 function update() {
   if (gameOver || isPaused) return;
 
@@ -95,23 +82,27 @@ function update() {
     player.isJumping = false;
   }
 
-  // Draw player sprite
-  ctx.drawImage(characterSprite, player.x, player.y, player.width, player.height);
+  // Draw player
+  ctx.fillStyle = '#3498db';
+  ctx.fillRect(player.x, player.y, player.width, player.height);
 
   // Update and draw obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
     const obs = obstacles[i];
     obs.x -= obstacleSpeed;
 
+    // Remove off-screen obstacles and update score
     if (obs.x + obs.width < 0) {
       obstacles.splice(i, 1);
       score++;
       scoreDisplay.textContent = `Score: ${score}`;
     }
 
+    // Draw obstacle
     ctx.fillStyle = '#e74c3c';
     ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
 
+    // Check for collision
     if (isColliding(player, obs)) {
       endGame();
     }
@@ -120,7 +111,7 @@ function update() {
   requestAnimationFrame(update);
 }
 
-// 💀 End game logic
+// End game logic
 function endGame() {
   gameOver = true;
   clearInterval(obstacleIntervalId);
