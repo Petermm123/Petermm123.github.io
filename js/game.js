@@ -1,53 +1,52 @@
-const jumpSound = new Audio('assets/sounds/jump.mp3'); // jumping sound
+// Load sound effects
+const jumpSound = new Audio('assets/sounds/jump.mp3');
 const gameOverSound = new Audio('assets/sounds/game-over.mp3');
 
-// Core game logic: player jump, obstacle generation, scoring
-
 const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score-display');
 
 // Game settings
 const gravity = 0.5;
 const jumpStrength = -10;
 const obstacleSpeed = 3;
-const obstacleInterval = 1500; // ms
+const obstacleInterval = 1500;
 
-// Player object
+
 const player = {
   x: 50,
   y: canvas.height - 60,
   width: 20,
   height: 50,
   velocityY: 0,
-  isJumping: false
+  isJumping: false//  Player object
 };
 
-// Obstacles array
+
 let obstacles = [];
 let score = 0;
 let gameOver = false;
+let isPaused = false;
+let obstacleIntervalId;// Obstacles and game state
 
-// Handle jump
+// 🕹️ Handle jump input
 function jump() {
-  if (!player.isJumping) {
+  if (!player.isJumping && !isPaused && !gameOver) {
     player.velocityY = jumpStrength;
     player.isJumping = true;
-    
-// Play jump sound
-   jumpSound.currentTime = 0; // rewind to start
-  jumpSound.play();
-
+    jumpSound.currentTime = 0;
+    jumpSound.play();
   }
 }
 
-// Touch and keyboard support
+// 🎮 Input listeners
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space') jump();
 });
 canvas.addEventListener('touchstart', jump);
+document.body.addEventListener('touchstart', jump);
 
-// Create obstacles
+// 🧱 Spawn new obstacles
 function spawnObstacle() {
   const height = 30 + Math.random() * 50;
   obstacles.push({
@@ -58,7 +57,7 @@ function spawnObstacle() {
   });
 }
 
-// Collision detection
+// 🧠 Collision detection
 function isColliding(a, b) {
   return (
     a.x < b.x + b.width &&
@@ -70,11 +69,11 @@ function isColliding(a, b) {
 
 // Game loop
 function update() {
-  if (gameOver) return;
+  if (gameOver || isPaused) return;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Update player
+  // Update player physics
   player.velocityY += gravity;
   player.y += player.velocityY;
 
@@ -94,7 +93,7 @@ function update() {
     const obs = obstacles[i];
     obs.x -= obstacleSpeed;
 
-    // Remove off-screen obstacles
+    // Remove off-screen obstacles and update score
     if (obs.x + obs.width < 0) {
       obstacles.splice(i, 1);
       score++;
@@ -105,7 +104,7 @@ function update() {
     ctx.fillStyle = '#e74c3c';
     ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
 
-    // Check collision
+    // Check for collision
     if (isColliding(player, obs)) {
       endGame();
     }
@@ -114,25 +113,37 @@ function update() {
   requestAnimationFrame(update);
 }
 
-// End game
+// End game logic
 function endGame() {
-  if (!gameOver) {
-    gameOver = true;
+  gameOver = true;
+  clearInterval(obstacleIntervalId);
 
-    // Play game over sound
-    gameOverSound.currentTime = 0;
-    gameOverSound.play();
+  //  Play game over sound
+  gameOverSound.currentTime = 0;
+  gameOverSound.play();
 
-    // Save score andredirect
-    localStorage.setItem('skyjumper_score', score);
-    setTimeout(() => {
-      window.location.href = 'scores.html';
-    }, 1000); // Wait 1 second to let the sound play
-  }
+  localStorage.setItem('skyjumper_score', score);
+
+  // Wait 1 second before redirecting
+  setTimeout(() => {
+    window.location.href = 'scores.html';
+  }, 1000);
 }
 
-
-// Start game
-setInterval(spawnObstacle, obstacleInterval);
+// ▶Start game
+obstacleIntervalId = setInterval(spawnObstacle, obstacleInterval);
 update();
-document.body.addEventListener('touchstart', jump);
+
+// ⏸ Pause/Resume button logic
+document.getElementById('pause-btn').addEventListener('click', () => {
+  isPaused = !isPaused;
+  const btn = document.getElementById('pause-btn');
+  btn.textContent = isPaused ? '▶ Resume' : '⏸ Pause';
+
+  if (isPaused) {
+    clearInterval(obstacleIntervalId);
+  } else {
+    obstacleIntervalId = setInterval(spawnObstacle, obstacleInterval);
+    update();
+  }
+});
