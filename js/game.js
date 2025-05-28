@@ -37,12 +37,24 @@ function jump() {
   }
 }
 
-// 🕹️ Input listeners
-canvas.addEventListener('click', jump);
+// Input listeners
+document.body.addEventListener('click', (e) => {
+  // Only trigger jump if the click is within the canvas area
+  const rect = canvas.getBoundingClientRect();
+  if (
+    e.clientX >= rect.left &&
+    e.clientX <= rect.right &&
+    e.clientY >= rect.top &&
+    e.clientY <= rect.bottom
+  ) {
+    jump();
+  }
+});
+
 canvas.addEventListener('touchstart', jump);
 document.body.addEventListener('touchstart', jump);
 
-// 🧱 Spawn new obstacles
+//  Spawn new obstacles
 function spawnObstacle() {
   const height = 30 + Math.random() * 50;
   obstacles.push({
@@ -53,7 +65,7 @@ function spawnObstacle() {
   });
 }
 
-// 🧠 Collision detection
+// Collision detection
 function isColliding(a, b) {
   return (
     a.x < b.x + b.width &&
